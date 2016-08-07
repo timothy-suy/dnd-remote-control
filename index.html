@@ -7,19 +7,36 @@
 		<script>
 			$(function () {
 				var socket = io('http://server.local:3000');
-				socket.on('input', function(message){
-					$('#content').append('<span style=\'color:#660000; font-weight: bold; \'>' + message.data.from + ' said: </span><span>' + message.data.content + '</span><br/>');
+				socket.on('remote-control', function(message){
+					if (message.data.from === 'remote control') {
+						$('#content').append('<span style=\'color:#990000; font-weight: bold; \'>' + message.data.content + '</span><br/>');
+					}
+					else if (message.data.from === 'display') {
+						$('#content').append('<span style=\'color:#009900; font-weight: bold; \'>' + message.data.content + '</span><br/>');
+					}
+				});
+				socket.on('display', function(message){
+					if (message.data.from === 'remote control') {
+						$('#content').append('<span style=\'color:#000099; font-weight: bold; \'>' + message.data.content + '</span><br/>');
+					}
+					else if (message.data.from === 'display') {
+						$('#content').append('<span style=\'color:#990099; font-weight: bold; \'>' + message.data.content + '</span><br/>');
+					}
 				});
 				$('#send').click(function () {
-					socket.emit('input', 'TESTMESSAGE');
+					socket.emit('remote-control', {sender: 'remote control', content: 'this is remote-control speaking on remote-control channel'});
 				});
 			});
 		</script>
 	</head>
 	<body>
 		<div id='content' style='min-width: 100%; min-height: 95%; font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;'>
-			<span>click, and a message should appear underneath</span>
-			<button id='send' type='button' name='send'>send</button>
+			<span style='font-weight: bold; '>legend:</span><br/>
+			<span style='font-weight: bold; color: #FFFFFF; background-color: #990000; '>SENT BY <b>REMOTE CONTROL</b> ON CHANNEL <b>REMOTE-CONTROL</b></span><br/>
+			<span style='font-weight: bold; color: #FFFFFF; background-color: #009900; '>SENT BY <b>DISPLAY</b> ON CHANNEL <b>REMOTE-CONTROL</b></span><br/>
+			<span style='font-weight: bold; color: #FFFFFF; background-color: #000099; '>SENT BY <b>REMOTE CONTROL</b> ON CHANNEL <b>DISPLAY</b></span><br/>
+			<span style='font-weight: bold; color: #FFFFFF; background-color: #990099; '>SENT BY <b>DISPLAY</b> ON CHANNEL <b>DISPLAY</b></span><br/>
+			<button id='send' type='button' name='send'>click to send a message</button><br/>
 			<hr>
 		</div>
 	</body>
