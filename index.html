@@ -1,0 +1,26 @@
+<html>
+	<!-- temporary script to test communications-setup -->
+	<head>
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<script src="https://cdn.socket.io/socket.io-1.3.4.js"></script>
+		<script>
+			$(function () {
+				var socket = io('http://server.local:3000');
+				socket.on('input', function(message){
+					$('#content').append('<span style=\'color:#660000; font-weight: bold; \'>' + message.data.from + ' said: </span><span>' + message.data.content + '</span><br/>');
+				});
+				$('#send').click(function () {
+					socket.emit('input', 'TESTMESSAGE');
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id='content' style='min-width: 100%; min-height: 95%; font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;'>
+			<span>click, and a message should appear underneath</span>
+			<button id='send' type='button' name='send'>send</button>
+			<hr>
+		</div>
+	</body>
+</html>
