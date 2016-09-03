@@ -6,38 +6,43 @@
 		<script src="https://cdn.socket.io/socket.io-1.3.4.js"></script>
 		<script>
 			$(function () {
-				var socket = io('http://server.local:3000');
-				socket.on('remote-control', function(message){
-					if (message.data.from === 'remote control') {
-						$('#content').append('<span style=\'color:#990000; font-weight: bold; \'>' + message.data.content + '</span><br/>');
-					}
-					else if (message.data.from === 'display') {
-						$('#content').append('<span style=\'color:#009900; font-weight: bold; \'>' + message.data.content + '</span><br/>');
-					}
+				var socket = io('http://'+window.location.hostname+':3000');
+				$('#left').click(function () {
+					socket.emit('remote-control', {instruction: {type: 'moveViewport', data: {direction: 'left', value: 1}}});
 				});
-				socket.on('display', function(message){
-					if (message.data.from === 'remote control') {
-						$('#content').append('<span style=\'color:#000099; font-weight: bold; \'>' + message.data.content + '</span><br/>');
-					}
-					else if (message.data.from === 'display') {
-						$('#content').append('<span style=\'color:#990099; font-weight: bold; \'>' + message.data.content + '</span><br/>');
-					}
+				$('#right').click(function () {
+					socket.emit('remote-control', {instruction: {type: 'moveViewport', data: {direction: 'right', value: 1}}});
 				});
-				$('#send').click(function () {
-					socket.emit('remote-control', {sender: 'remote control', content: 'this is remote-control speaking on remote-control channel'});
+				$('#up').click(function () {
+					socket.emit('remote-control', {instruction: {type: 'moveViewport', data: {direction: 'up', value: 1}}});
+				});
+				$('#down').click(function () {
+					socket.emit('remote-control', {instruction: {type: 'moveViewport', data: {direction: 'down', value: 1}}});
 				});
 			});
 		</script>
 	</head>
 	<body>
-		<div id='content' style='min-width: 100%; min-height: 95%; font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;'>
-			<span style='font-weight: bold; '>legend:</span><br/>
-			<span style='font-weight: bold; color: #FFFFFF; background-color: #990000; '>SENT BY <b>REMOTE CONTROL</b> ON CHANNEL <b>REMOTE-CONTROL</b></span><br/>
-			<span style='font-weight: bold; color: #FFFFFF; background-color: #009900; '>SENT BY <b>DISPLAY</b> ON CHANNEL <b>REMOTE-CONTROL</b></span><br/>
-			<span style='font-weight: bold; color: #FFFFFF; background-color: #000099; '>SENT BY <b>REMOTE CONTROL</b> ON CHANNEL <b>DISPLAY</b></span><br/>
-			<span style='font-weight: bold; color: #FFFFFF; background-color: #990099; '>SENT BY <b>DISPLAY</b> ON CHANNEL <b>DISPLAY</b></span><br/>
-			<button id='send' type='button' name='send'>click to send a message</button><br/>
-			<hr>
+		<div id='content' style='display: block; float: none; width: 1020px; text-align: center;'>
+			<table style='width: 100%;'>
+				<tr>
+					<td colspan='2' style='padding: 5px; text-align: center; '>
+						<button type='button' id='up' style='width: 350px; height: 350px; font-size: 75px;'>up</button>
+					</td>
+				</tr>
+				<tr>
+					<td style='padding: 5px; text-align: center; '>
+						<button type='button' id='left' style='width: 350px; height: 350px; font-size: 75px;'>left</button>
+					</td>
+					<td style='padding: 5px; text-align: center; '>
+						<button type='button' id='right' style='width: 350px; height: 350px; font-size: 75px;'>right</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2' style='padding: 5px; text-align: center; '>
+						<button type='button' id='down' style='width: 350px; height: 350px; font-size: 75px;'>down</button>
+					</td>
+				</tr>
 		</div>
-	</body>
+ 	</body>
 </html>
